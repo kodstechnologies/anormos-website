@@ -1,0 +1,16 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export const Route = createFileRoute("/products")({ head: () => ({ meta: [{ title: "Products — Anormos" }, { name: "description", content: "The shared product foundation behind every Anormos platform." }, { property: "og:title", content: "Products — Anormos" }, { property: "og:description", content: "Composable tools for data, intelligence, workflow, and deployment." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }), component: Products });
+
+const layers = [
+  ["Connect", "Bring together live, historical, structured, and unstructured information without erasing the systems that created it.", "Sources", "Shared operational context"],
+  ["Understand", "Model the people, assets, events, and relationships that define how your operation actually works.", "Context", "Decisions with consequence"],
+  ["Act", "Turn insight into governed workflows, simulations, alerts, and decisions across teams.", "Decision", "Coordinated follow-through"],
+];
+function Products() { return <main className="bg-background pt-20">
+  <section className="bg-foreground px-5 py-14 text-background lg:px-8 lg:py-20"><div className="mx-auto max-w-[1480px]"><div className="flex justify-between text-xs text-background/45"><span>Product foundation</span><span>Connect / Understand / Act</span></div><h1 className="mt-28 max-w-6xl text-[clamp(3.8rem,9vw,9rem)] font-semibold leading-[.86]">Operational intelligence.<br/><span className="text-background/35">Built to move work forward.</span></h1><p className="mt-16 max-w-2xl border-l-2 border-primary pl-6 text-xl leading-relaxed text-background/60">Composable capabilities let teams unify data, deploy intelligence, orchestrate work, and keep every decision accountable.</p></div></section>
+  <section className="px-5 py-24 lg:px-8 lg:py-36"><div className="mx-auto max-w-[1480px]">{layers.map(([title,text,from,to],i)=><article key={title} className="grid min-h-[390px] gap-8 border-t border-border py-12 lg:grid-cols-12"><span className="text-xs text-primary lg:col-span-1">0{i+1}</span><h2 className="text-5xl font-semibold lg:col-span-4 lg:text-7xl">{title}</h2><div className="lg:col-span-4"><p className="text-lg leading-relaxed text-muted-foreground">{text}</p></div><div className="flex items-center gap-4 self-end text-xs lg:col-span-3"><span>{from}</span><ArrowRight className="size-4 text-primary"/><span className="font-semibold">{to}</span></div></article>)}</div></section>
+  <section className="bg-primary px-5 py-20 text-primary-foreground lg:px-8"><div className="mx-auto flex max-w-[1480px] flex-col gap-8 md:flex-row md:items-end md:justify-between"><h2 className="max-w-4xl text-5xl font-semibold md:text-7xl">A foundation that changes with the operation.</h2><Button asChild variant="outline" className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground hover:text-primary"><Link to="/platforms">See it in each platform <ArrowUpRight/></Link></Button></div></section>
+</main>; }
