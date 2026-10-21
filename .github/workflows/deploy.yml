@@ -1,0 +1,66 @@
+name: Deploy Anormos Website
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: anormos-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          command_timeout: 30m
+          script: |
+            set -eu
+
+            cd /home/ubuntu/anormos-website
+
+            export PATH="$HOME/.bun/bin:$PATH"
+
+            echo "Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Installing dependencies..."
+            bun install --frozen-lockfile
+
+            echo "Building production application..."
+            NODE_OPTIONS="--max-old-space-size=768" \
+            NITRO_PRESET=node-server \
+            bun run build
+
+            echo "Checking production server output..."
+            test -f .output/server/index.mjs
+
+            echo "Restarting application..."
+            if pm2 describe anormos-website >/dev/null 2>&1; then
+              PORT=3000 HOST=127.0.0.1 \
+                pm2 restart anormos-website --update-env
+            else
+              PORT=3000 HOST=127.0.0.1 \
+                pm2 start /home/ubuntu/anormos-website/.output/server/index.mjs \
+                --name anormos-website
+            fi
+
+            pm2 save
+
+            echo "Checking application response..."
+            sleep 3
+            curl -fsS --max-time 15 http://127.0.0.1:3000/ -o /dev/null
+
+            echo "Deployment completed successfully."
