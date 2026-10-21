@@ -1,4 +1,4 @@
-```yaml
+
 name: Deploy Anormos Website
 
 on:
@@ -75,4 +75,4 @@ jobs:
             curl -fsS --max-time 20 http://127.0.0.1:3000/ -o /dev/null
 
             echo "Deployment completed successfully."
-```
+
