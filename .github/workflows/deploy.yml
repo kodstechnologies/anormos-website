@@ -1,3 +1,4 @@
+```yaml
 name: Deploy Anormos Website
 
 on:
@@ -28,9 +29,17 @@ jobs:
           script: |
             set -eu
 
+            export HOME=/home/ubuntu
+            export PATH="/home/ubuntu/.bun/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+
             cd /home/ubuntu/anormos-website
 
-            export PATH="$HOME/.bun/bin:$PATH"
+            echo "Checking Bun..."
+            test -x /home/ubuntu/.bun/bin/bun
+            bun --version
+
+            echo "Checking PM2..."
+            command -v pm2
 
             echo "Pulling latest code..."
             git fetch origin main
@@ -44,10 +53,11 @@ jobs:
             NITRO_PRESET=node-server \
             bun run build
 
-            echo "Checking production server output..."
-            test -f .output/server/index.mjs
+            echo "Verifying production build..."
+            test -f /home/ubuntu/anormos-website/.output/server/index.mjs
 
             echo "Restarting application..."
+
             if pm2 describe anormos-website >/dev/null 2>&1; then
               PORT=3000 HOST=127.0.0.1 \
                 pm2 restart anormos-website --update-env
@@ -57,10 +67,12 @@ jobs:
                 --name anormos-website
             fi
 
+            echo "Saving PM2 process list..."
             pm2 save
 
             echo "Checking application response..."
-            sleep 3
-            curl -fsS --max-time 15 http://127.0.0.1:3000/ -o /dev/null
+            sleep 5
+            curl -fsS --max-time 20 http://127.0.0.1:3000/ -o /dev/null
 
             echo "Deployment completed successfully."
+```
