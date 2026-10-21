@@ -38,9 +38,9 @@ const leadership = [
   { name: "Girish Ottapalam", role: "Board Member & Chief Growth Officer", image: boardOne },
 ];
 const board = [
+  { name: "Vishnu Mohan", role: "Board Member & Chief Sales Officer", image: boardFour },
   { name: "Sucharith Prashanth", role: "Board Member & Chief Marketing Officer", image: boardTwo },
-  { name: "Pradeesh PL", role: "Board Member - IP and Data Protection", image: boardThree },
-  { name: "Vishnu Mohan", role: "Board Member & Head of Aigis Operations", image: boardFour },
+  { name: "Pradeesh PL", role: "Board Member & Advisor", image: boardThree },
 ];
 const principles = [
   { number: "01", title: "See the whole system", text: "Connect people, processes, data and physical assets so every team works from the same current picture." },
